@@ -1,0 +1,28 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>ghost/1.png</file>
+        <file>ghost/2.png</file>
+        <file>ghost/3.png</file>
+        <file>ghost/4.png</file>
+        <file>ghost/4-2.png</file>
+        <file>ghost/5.png</file>
+        <file>ghost/6.png</file>
+        <file>ghost/6-2.png</file>
+        <file>ghost/7.png</file>
+        <file>ghost/8.png</file>
+        <file>ghost/9.png</file>
+        <file>ghost/9-2.png</file>
+        <file>ghost/10.png</file>
+        <file>ghost/11.png</file>
+        <file>ghost/11-2.png</file>
+        <file>ghost/12.png</file>
+        <file>ghost/12-2.png</file>
+        <file>ghost/13.png</file>
+        <file>ghost/13-2.png</file>
+        <file>ghost/13-3.png</file>
+        <file>ghost/14.png</file>
+        <file>ghost/14-2.png</file>
+        <file>ghost/15.png</file>
+    </qresource>
+</RCC>
