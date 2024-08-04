@@ -1,6 +1,6 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
-import QtQuick.Window 2.12
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Window
 
 Window {
     visible: true
@@ -61,7 +61,7 @@ Window {
                     id: imgID
                     anchors.fill: parent
                     anchors.margins: 2
-                    source: "qrc:/ghost/" + (Math.floor(index/5) + 1) + ".png"
+                    source: "qrc:/ghost/" + manager.levelItems[index] + ".png"
                 }
 
                 MouseArea{
@@ -84,19 +84,38 @@ Window {
                     }
                     onReleased: {
                         isPressed = false
-                        backPositionXAnimationID.from = rectID.x
-                        backPositionXAnimationID.to = preX
-                        backPositionYAnimationID.from = rectID.y
-                        backPositionYAnimationID.to = preY
-                        backPositionAnimationID.start()
+
                         rectID.z = 0
                         rectID.border.color = "white"
                         rectID.border.width = 2
+                        // 若是在得分区域内:拖拽
+                        if(isInScoreArea(rectID.x + operationRectID.x,rectID.y + operationRectID.y,rectID.width,rectID.height)){
+                            // 先设为不可见
+                            rectID.visible = false
+                            // 请求拖拽计算
+                            manager.dragEvent(index)
+                        }
+                        // 点击或拖拽未在得分区内
+                        else{
+                            if(Math.abs(rectID.x-preX)>=5&&Math.abs(rectID.y-preY)>=5){
+                                backPositionXAnimationID.from = rectID.x
+                                backPositionXAnimationID.to = preX
+                                backPositionYAnimationID.from = rectID.y
+                                backPositionYAnimationID.to = preY
+                                backPositionAnimationID.start()
+                            }
+                        }
                     }
                     onPositionChanged: {
                         if(isPressed){
                             rectID.x += mouseX - pressedX
                             rectID.y += mouseY - pressedY
+                            if(isInScoreArea(rectID.x + operationRectID.x,rectID.y + operationRectID.y,rectID.width,rectID.height)){
+                                rectID.border.color = "lightgreen"
+                            }
+                            else{
+                                rectID.border.color = "red"
+                            }
                         }
                     }
                     onEntered: {
@@ -129,11 +148,18 @@ Window {
                         epsilon: 0.25
                     }
                 }
-
+                // 下落动画
 
 
             }
 
         }
+    }
+
+    function isInScoreArea(x,y,w,h){
+        if(x>=scoreAreaID.x && x+w<=scoreAreaID.x + scoreAreaID.width && y +h <= scoreAreaID.y + scoreAreaID.height){
+            return true
+        }
+        return false
     }
 }
