@@ -1,12 +1,12 @@
-import QtQuick
-import QtQuick.Controls
-import QtQuick.Window
+import QtQuick 2.12
+import QtQuick.Controls 2.12
+import QtQuick.Window 2.12
 
 Window {
     visible: true
     width: 600
     height: 850
-    title: qsTr("Hello World")
+    title: qsTr("万妖行")
 
     Rectangle{
         id: scoreAreaID
@@ -92,6 +92,12 @@ Window {
                         if(isInScoreArea(rectID.x + operationRectID.x,rectID.y + operationRectID.y,rectID.width,rectID.height)){
                             // 先设为不可见
                             rectID.visible = false
+
+                            // 请求其在矩阵内坐标
+                            var locate = manager.indexToMatrixLocate(index)
+                            rectID.x = operationRectID.posX[locate[1]]
+                            rectID.y = operationRectID.posY[0] - 110
+                            rectID.visible = true
                             // 请求拖拽计算
                             manager.dragEvent(index)
                         }
@@ -149,11 +155,56 @@ Window {
                     }
                 }
                 // 下落动画
+                ParallelAnimation{
+                    id:downPositionAnimationID
+
+                    NumberAnimation {
+                        id: downPositionAninationXID
+                        target: rectID
+                        property: "x"
+                        duration: 200
+                        easing.type: Easing.InOutQuad
+                    }
+
+                    NumberAnimation {
+                        id: downPositionAnimationYID
+                        target: rectID
+                        property: "y"
+                        duration: 200
+                        easing.type: Easing.InOutQuad
+                    }
+
+                    onFinished: {
+                        console.log("11111111111111")
+                    }
+                }
+
+                function downAnimation(downX,downY){
+                    downPositionAninationXID.from = rectID.x
+                    downPositionAninationXID.to = downX
+                    downPositionAnimationYID.from = rectID.y
+                    downPositionAnimationYID.to = downY
+
+                    downPositionAnimationID.start()
+                }
 
 
             }
 
         }
+        function onDownRectAnimation(moveRects,movedX,movedY){
+            console.log("x: " + movedX + " y: " + movedY)
+            for(var i=0;i<moveRects.length;i++){
+                var item = repeaterID.itemAt(moveRects[i])
+                item.downAnimation(item.x,posY[movedX-i])
+            }
+
+        }
+
+        Component.onCompleted: {
+            manager.downRectAnimation.connect(onDownRectAnimation)
+        }
+
     }
 
     function isInScoreArea(x,y,w,h){
@@ -162,4 +213,8 @@ Window {
         }
         return false
     }
+
+
+
+
 }

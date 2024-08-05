@@ -28,7 +28,7 @@ include_directories(src/)
 aux_source_directory(src/ SRC)
 
 
-find_package(Qt6 COMPONENTS Core Quick REQUIRED)
+find_package(Qt5 COMPONENTS Core Quick REQUIRED)
 
 if(ANDROID)
     add_library(MyGame SHARED
@@ -46,4 +46,4 @@ endif()
 target_compile_definitions(MyGame
   PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
 target_link_libraries(MyGame
-  PRIVATE Qt6::Core Qt6::Quick)
+  PRIVATE Qt5::Core Qt5::Quick)
