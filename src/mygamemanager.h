@@ -25,6 +25,9 @@ class MyGameManager : public QObject {
   // 在matrix_index_中寻找当前index所在行列，其中入口参数是方块的原生index，当期拖动或者下落后index保持不变，但其行列号改变了
   Q_INVOKABLE QList<int> indexToMatrixLocate(int indexNum);
 
+  // 在拖拽完成下落后，下落方块发出请求合并请求，只有当index=拖拽方块的index才能进行下一步计算
+  Q_INVOKABLE void mergeRequest(int index);
+
  signals:
   void levelItemsChanged();
 
@@ -41,6 +44,11 @@ class MyGameManager : public QObject {
 
   // 维护格子对应level
   QList<int> item_levels_;
+
+  // 记录拖拽的index
+  int drag_index_{-1};
+  // 记录拖拽的位置
+  QList<int> drag_pos_;
 };
 
 #endif  // MYGAMEMANAGER_H

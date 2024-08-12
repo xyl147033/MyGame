@@ -2,6 +2,8 @@
 
 #include <QDebug>
 
+#include "gamefunction.h"
+
 MyGameManager::MyGameManager(QObject *parent) : QObject{parent} {
   const QList<int> items = {1, 2, 4, 5, 2, 3, 3, 1, 3, 1, 1, 1, 2,
                             2, 3, 2, 3, 1, 4, 3, 1, 2, 1, 2, 2};
@@ -43,8 +45,32 @@ void MyGameManager::dragEvent(int index) {
 
   needToMove.push_back(index);
 
+  drag_index_ = index;
+  drag_pos_ = {x, y};
+
   // 下落动画
   emit downRectAnimation(needToMove, x, y);
+}
+
+void MyGameManager::mergeRequest(int index) {
+  if (index != drag_index_) {
+    return;
+  }
+
+  QList<QList<bool>> searched;
+  for (int i = 0; i < matrix_.size(); i++) {
+    QList<bool> temp;
+    for (int j = 0; j < matrix_[0].size(); j++) {
+      temp.push_back(false);
+    }
+    searched.push_back(temp);
+  }
+
+  // 计算合并方块
+  auto res = GameFunction::bfs(drag_pos_[0], drag_pos_[1], matrix_, searched);
+  if (res.size() < 3) {
+    return;
+  }
 }
 
 void MyGameManager::clickEvent(int index) {}
