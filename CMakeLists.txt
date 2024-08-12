@@ -24,19 +24,20 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #    endif()
 #endif()
 
-include_directories(src)
-aux_source_directory(src SRC)
+include_directories(src/)
+aux_source_directory(src/ SRC)
+
 
 find_package(Qt5 COMPONENTS Core Quick REQUIRED)
 
 if(ANDROID)
     add_library(MyGame SHARED
-      ${SRC}
       main.cpp
       qml.qrc
     )
 else()
     add_executable(MyGame
+      ${SRC}
       main.cpp
       qml.qrc
     )

@@ -1,5 +1,8 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
+
+#include "src/mygamemanager.h"
 
 int main(int argc, char *argv[])
 {
@@ -7,7 +10,11 @@ int main(int argc, char *argv[])
 
     QGuiApplication app(argc, argv);
 
+    MyGameManager manager;
+
     QQmlApplicationEngine engine;
+    auto context = engine.rootContext();
+    context->setContextProperty("manager",&manager);
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
         &app, [url](QObject *obj, const QUrl &objUrl) {
